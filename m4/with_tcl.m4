@@ -98,7 +98,7 @@ AC_DEFUN([PBS_AC_WITH_TCL],
     [tcl_inc="-I$tcl_dir/include"]
     [tcl_lib="$tcl_dir/lib/libtcl$TCL_VERSION.a $TCL_LIBS"]
     [tk_inc="-I$tk_dir/include"]
-    [tk_lib="$tk_dir/lib/libtcl$TCL_VERSION.a $tk_dir/lib/libtk$TK_VERSION.a $TK_LIBS"],
+    [tk_lib="$tcl_dir/lib/libtcl$TCL_VERSION.a $tk_dir/lib/libtk$TK_VERSION.a $TK_LIBS"],
     # Using system installed tcl
     [tcl_inc="$TCL_INCLUDE_SPEC"]
     [tcl_lib="$TCL_LIB_SPEC $TCL_LIBS"]

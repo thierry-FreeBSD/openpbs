@@ -57,16 +57,18 @@ AC_DEFUN([PBS_AC_WITH_TCL],
   )
   AS_IF([test "x$with_tk" != "x"],
     tk_dir=["$with_tk"],
-    tk_dir=["/usr"]
+    tk_dir=["$tcl_dir"]
   )
   AC_MSG_CHECKING([for Tcl])
-  AS_IF([test -r "$tcl_dir/tclConfig.sh"],
-    [. "$tcl_dir/tclConfig.sh"],
+  AS_IF([test -r "$tcl_dir/lib64/tclConfig.sh"],
+    [. "$tcl_dir/lib64/tclConfig.sh"],
     AS_IF([test -r "$tcl_dir/lib/tclConfig.sh"],
       [. "$tcl_dir/lib/tclConfig.sh"],
       AS_IF([test -r "$tcl_dir/lib/x86_64-linux-gnu/tclConfig.sh"],
         [. "$tcl_dir/lib/x86_64-linux-gnu/tclConfig.sh"],
-        AC_MSG_ERROR([tclConfig.sh not found]))))
+        AS_IF([test -r "$tcl_dir/tclConfig.sh"],
+          [. "$tcl_dir/tclConfig.sh"],
+          AC_MSG_ERROR([tclConfig.sh not found])))))
   AC_MSG_RESULT([$tcl_dir])
   AC_MSG_CHECKING([for Tcl version])
   AS_IF([test "x$TCL_VERSION" = "x"],
@@ -75,26 +77,28 @@ AC_DEFUN([PBS_AC_WITH_TCL],
   [tcl_version="$TCL_VERSION"]
   AC_SUBST(tcl_version)
   AC_MSG_CHECKING([for Tk])
-  AS_IF([test -r "$tk_dir/tkConfig.sh"],
-    [. "$tk_dir/tkConfig.sh"],
-    AS_IF([test -r "$tcl_dir/lib/tkConfig.sh"],
-      [. "$tcl_dir/lib/tkConfig.sh"],
-      AS_IF([test -r "$tcl_dir/lib/x86_64-linux-gnu/tkConfig.sh"],
-        [. "$tcl_dir/lib/x86_64-linux-gnu/tkConfig.sh"],
-        AC_MSG_ERROR([tkConfig.sh not found]))))
-  AC_MSG_RESULT([$tcl_dir])
+  AS_IF([test -r "$tk_dir/lib64/tkConfig.sh"],
+    [. "$tk_dir/lib64/tkConfig.sh"],
+    AS_IF([test -r "$tk_dir/lib/tkConfig.sh"],
+      [. "$tk_dir/lib/tkConfig.sh"],
+      AS_IF([test -r "$tk_dir/lib/x86_64-linux-gnu/tkConfig.sh"],
+        [. "$tk_dir/lib/x86_64-linux-gnu/tkConfig.sh"],
+        AS_IF([test -r "$tk_dir/tkConfig.sh"],
+          [. "$tk_dir/tkConfig.sh"],
+          AC_MSG_ERROR([tkConfig.sh not found])))))
+  AC_MSG_RESULT([$tk_dir])
   AC_MSG_CHECKING([for Tk version])
   AS_IF([test "x$TK_VERSION" = "x"],
     AC_MSG_ERROR([Could not determine Tk version]))
   AC_MSG_RESULT([$TK_VERSION])
   [tk_version="$TK_VERSION"]
   AC_SUBST(tk_version)
-  AS_IF([test x$TCL_INCLUDE_SPEC = x],
+  AS_IF([test "x$TCL_INCLUDE_SPEC" = "x"],
     # Using developer installed tcl
     [tcl_inc="-I$tcl_dir/include"]
     [tcl_lib="$tcl_dir/lib/libtcl$TCL_VERSION.a $TCL_LIBS"]
-    [tk_inc="-I$tcl_dir/include"]
-    [tk_lib="$tcl_dir/lib/libtcl$TCL_VERSION.a $tcl_dir/lib/libtk$TK_VERSION.a $TK_LIBS"],
+    [tk_inc="-I$tk_dir/include"]
+    [tk_lib="$tk_dir/lib/libtcl$TCL_VERSION.a $tk_dir/lib/libtk$TK_VERSION.a $TK_LIBS"],
     # Using system installed tcl
     [tcl_inc="$TCL_INCLUDE_SPEC"]
     [tcl_lib="$TCL_LIB_SPEC $TCL_LIBS"]
